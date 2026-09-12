@@ -1,129 +1,122 @@
-# Portafolio
+# Portafolio — Sebastián González
 
-Portafolio personal de una sola página con un portal de entrada en WebGL y
-un interior de estética editorial. Construido con **Vue 3**, **TypeScript**,
-**Tailwind CSS v4**, **Three.js** y **GSAP**.
-
-## Cómo funciona
-
-Al abrir el sitio se muestra un **portal de bienvenida** a pantalla completa: un campo
-de partículas frías atravesado por anillos concéntricos. Al pulsar «Entrar al perfil»,
-la cámara cruza el umbral y GSAP revela el portafolio.
-
-Las partículas reaccionan al cursor: las cercanas se encienden, crecen y se
-apartan a su paso.
-
-El portal se muestra **una vez por sesión** (`sessionStorage`): quien recarga la página
-entra directo al perfil, pero quien vuelve otro día ve la bienvenida de nuevo.
-
-El interior usa un vocabulario de animación editorial —titulares que entran por
-líneas desde una máscara, imágenes reveladas por cortina, paralaje y cifras que
-cuentan— definido en `src/composables/useEditorial.ts` y activado por atributos
-en el marcado:
-
-| Atributo         | Gesto                                          |
-| ---------------- | ---------------------------------------------- |
-| `data-line`      | titular que entra por líneas desde una máscara  |
-| `data-word`      | titular que entra palabra a palabra             |
-| `data-rise`      | bloque que sube al entrar (el valor es retardo) |
-| `data-curtain`   | imagen revelada por una cortina                 |
-| `data-parallax`  | desplazamiento lento durante el scroll          |
-| `data-count`     | cifra que cuenta hasta su valor                 |
-| `data-rule`      | línea divisoria que se dibuja                   |
-
-## Comandos
+Sitio personal de una sola página. Vue 3 + TypeScript + Vite, CSS nativo,
+sin dependencias de runtime más allá de Vue.
 
 ```bash
-npm install        # instalar dependencias
-npm run dev        # servidor de desarrollo
-npm run build      # comprobar tipos y compilar a dist/
-npm run preview    # previsualizar la compilación
+npm install
+npm run dev      # servidor de desarrollo
+npm run build    # vue-tsc + build de producción
+npm run preview  # sirve dist/ en localhost:4173
 ```
 
-## Personalización
+## Concepto
 
-### 1. Tus datos
+**Expediente técnico.** La página se compone como un documento
+institucional bien diseñado: numerada, tabulada, con tipografía grande y
+márgenes amplios. La rejilla visible, los metadatos monoespaciados y la
+numeración de secciones no son adorno — son el lenguaje nativo de un
+formulario tributario y de una póliza, que es de lo que trata el trabajo
+que el sitio expone.
 
-Todo el contenido está en un solo archivo: **`src/data/profile.ts`**.
-Ahí editas nombre, rol, bio, redes, stack, proyectos y trayectoria.
-Los datos de ejemplo están marcados con `TODO`.
+La dirección de arte completa, con las decisiones y su porqué, está en
+[`design-review/direccion-arte.md`](design-review/direccion-arte.md).
 
-Detalles útiles:
-
-- Un proyecto con `featured: true` ocupa el ancho completo de la grilla.
-- Si `live` o `repo` quedan vacíos, el botón correspondiente no se dibuja.
-- Si `experience` queda como array vacío, la sección desaparece.
-- Si `resume` queda vacío, el botón «Descargar CV» no aparece.
-
-### 2. Tus imágenes
-
-Las imágenes viven en `public/img/`. Los `.svg` actuales son placeholders
-generados en la paleta del sitio; reemplázalos por los tuyos y actualiza las
-rutas en `src/data/profile.ts` (y el `og:image` en `index.html`).
-Ver `public/img/README.md` para los tamaños recomendados.
-
-### 3. Título y metadatos
-
-En `index.html`: `<title>`, la descripción y las etiquetas Open Graph.
-
-### 4. Colores y temas
-
-El sitio tiene **tema claro y oscuro**, con un botón en la navegación. Arranca
-siguiendo la preferencia del sistema y recuerda la elección en `localStorage`.
-
-Los tokens son **semánticos**, no una escala fija: el mismo marcado sirve a
-ambos temas sin condicionales. Se definen en `src/style.css`:
-
-| Token             | Uso                                    |
-| ----------------- | -------------------------------------- |
-| `surface-deep`    | Fondo de página                        |
-| `surface`         | Fondo de sección                       |
-| `surface-raised`  | Tarjetas y superficies elevadas        |
-| `content-strong`  | Titulares                              |
-| `content`         | Texto corrido                          |
-| `content-muted`   | Texto secundario                       |
-| `content-subtle`  | Etiquetas y detalles                   |
-| `accent`          | Acento principal (cian)                |
-| `accent-alt`      | Acento secundario (índigo)             |
-| `line`            | Bordes y divisorias                    |
-
-Se usan como clases normales de Tailwind: `bg-surface-deep`, `text-content`,
-`border-line`. Para cambiar la identidad del sitio basta editar los valores en
-`:root` (oscuro) y `[data-theme='light']` (claro).
-
-La escena 3D tiene su propia paleta por tema en `portalPalettes`, dentro de
-`src/composables/usePortalScene.ts`. El tema claro no solo cambia de color:
-también pasa de blending aditivo a normal, porque sumar luz sobre un fondo
-claro no puede oscurecer y el campo de partículas desaparecería.
-
-### 5. Tipografía
-
-**Fira Sans** para todo el texto y **Fira Code** para las etiquetas
-monoespaciadas, cargadas desde Google Fonts en `index.html`. Los tokens
-`--font-sans`, `--font-display` y `--font-mono` están en `src/style.css`.
-
-## Estructura
+## Dónde está cada cosa
 
 ```
 src/
-├── data/profile.ts              ← tu contenido (edita esto)
-├── composables/
-│   ├── usePortalScene.ts        ← escena Three.js del portal
-│   ├── useEditorial.ts          ← vocabulario de animación editorial
-│   └── useTheme.ts              ← tema claro/oscuro
-├── components/
-│   ├── PortalGate.vue           ← pantalla de bienvenida
-│   ├── SiteNav.vue              ← navegación con sección activa
-│   └── sections/                ← Hero, Sobre mí, Proyectos, Stack…
-├── App.vue                      ← orquesta portal → sitio
-└── style.css                    ← tokens de ambos temas
+  data/profile.ts        TODO el texto del sitio y sus interfaces
+  styles/
+    tokens.css           única capa de variables (colores, escala, ritmo)
+    base.css             reset, tipografía, accesibilidad
+    layout.css           rejilla de 12 columnas y estructura de sección
+    components.css       lo que comparten varias secciones
+    motion.css           los cuatro gestos, como transiciones CSS
+  composables/
+    useEditorial.ts      dispara los gestos con IntersectionObserver
+    useTheme.ts          tema claro/oscuro
+    useProjectOverlay.ts estado de la ficha de proyecto
+  components/
+    SiteNav.vue          índice del documento
+    ProjectOverlay.vue   ficha de proyecto a pantalla completa
+    ClientWorkOverlay.vue  anexo con los proyectos de un cliente
+    sections/            las siete secciones, en orden de aparición
 ```
 
-## Accesibilidad
+### Contenido
 
-El sitio respeta `prefers-reduced-motion`: con esa preferencia activa se omiten
-todas las animaciones de entrada y el cruce del portal es inmediato. El contenido
-nunca depende del JS de animación para ser visible — el marcado ya es su propio
-estado final.
+`src/data/profile.ts` es la única fuente de texto. Ningún componente
+lleva copia dentro. Los datos son la trayectoria real; si falta un dato
+—una métrica, un enlace— se deja el hueco y se pregunta, no se rellena.
 
-El contraste de texto cumple **WCAG AA** en ambos temas.
+### Estilos
+
+Una sola capa de variables en `tokens.css`, con nombres de documento
+(`--paper`, `--ink`, `--rule`) y no de interfaz. Nada de hex sueltos en
+los componentes.
+
+**Los contrastes están medidos, no estimados.** Cada tono de tinta se
+comprobó contra las tres superficies de su tema; el par más ajustado es
+`--ink-faint` sobre `--paper-sunk`, 4.65:1. Si tocas un color, vuelve a
+medir: el gris de metadatos elegido a ojo daba 2.85:1 y fallaba AA.
+
+### Movimiento
+
+Cuatro gestos y no hay un quinto: revelado por líneas, bloques que suben,
+cortina sobre imágenes y filetes que se dibujan. Son transiciones CSS;
+`useEditorial` solo decide cuándo disparar.
+
+El estado inicial oculto vive bajo `[data-animate]`, que el JS pone en
+`<html>` al montar. **Sin JS el atributo no existe y la página se lee
+entera.** Además hay un plazo de 3 s tras el cual se revela lo que quede
+pendiente, para quien fotografía la página sin recorrerla.
+
+## Rendimiento
+
+| | Antes del rediseño | Ahora |
+|---|---|---|
+| JS minificado | 767 kB | 113 kB |
+| JS gzip | 224 kB | 41 kB |
+| Imágenes | 12 MB | 1,1 MB |
+| Vídeo | 14,8 MB | ninguno |
+| Dependencias runtime | vue, gsap, three, tailwind | vue |
+
+Las portadas son WebP. Eran fotografías guardadas como PNG de 2 MB cada
+una; si añades una nueva, conviértela antes:
+
+```bash
+ffmpeg -i entrada.png -vf "scale='min(1600,iw)':-2" -quality 82 salida.webp
+```
+
+## Verificación
+
+`_shot.mjs` toma capturas en cuatro tamaños y detecta desbordes
+horizontales y errores de consola. `_a11y.mjs` comprueba foco, Escape,
+`inert`, `reduce-motion`, jerarquía de encabezados y textos alternativos.
+Ambos necesitan `npm run preview` corriendo en el puerto 4173.
+
+```bash
+npm run build && npm run preview &
+node _shot.mjs
+node _a11y.mjs
+```
+
+No sustituyen una auditoría WCAG completa ni una medición en dispositivo
+físico.
+
+## Pendiente de contenido
+
+Huecos que el diseño deja preparados y que solo se llenan con datos
+reales:
+
+1. **GitHub y LinkedIn** están comentados en `socials` de `profile.ts`.
+   El bloque de contacto los espera.
+2. **`profile.resume` está vacío** — sin CV, el botón de descarga no
+   aparece.
+3. **`profile.portrait` apunta a un SVG marcador**, no a una foto.
+4. **Ningún proyecto tiene métricas.** No se inventaron: un número real
+   por ficha (páginas migradas, formularios cubiertos, tiempo de carga)
+   haría el relato más creíble.
+5. **Tres portadas son ilustraciones conceptuales**, no capturas, y así
+   se declaran en su pie.

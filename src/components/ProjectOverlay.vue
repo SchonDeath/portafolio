@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import gsap from 'gsap'
-import { prefersReducedMotion } from '@/composables/useEditorial'
 import type { Project } from '@/data/profile'
 
 /**
@@ -21,7 +19,6 @@ const { project, index } = defineProps<{
 
 const emit = defineEmits<{ close: [] }>()
 
-const panel = ref<HTMLElement | null>(null)
 const dialog = ref<HTMLElement | null>(null)
 const closeButton = ref<HTMLButtonElement | null>(null)
 
@@ -83,14 +80,6 @@ watch(
 
       await nextTick()
       closeButton.value?.focus()
-
-      if (!prefersReducedMotion() && panel.value) {
-        gsap.fromTo(
-          panel.value,
-          { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, ease: 'expo.out' },
-        )
-      }
     } else if (!next && prev) {
       document.body.classList.remove('is-locked')
       window.removeEventListener('keydown', onKeydown)
@@ -118,7 +107,7 @@ onBeforeUnmount(() => {
       aria-modal="true"
       :aria-label="project.title"
     >
-      <div ref="panel" class="overlay__panel">
+      <div class="overlay__panel">
         <!-- Cabecera de expediente: código, estado y cierre -->
         <header class="overlay__bar">
           <div class="shell overlay__bar-inner">
@@ -349,6 +338,10 @@ onBeforeUnmount(() => {
   letter-spacing: 0.04em;
 }
 
+/* La entrada la hacía GSAP; es un fade con desplazamiento, así que la
+   hace la propia transición de Vue. El panel se mueve y el fondo solo
+   funde: si se desplazara todo, el papel entraría desde abajo y se vería
+   el documento de detrás por el hueco. */
 .overlay-enter-active,
 .overlay-leave-active {
   transition: opacity var(--dur-ui) var(--ease-ui);
@@ -357,5 +350,21 @@ onBeforeUnmount(() => {
 .overlay-enter-from,
 .overlay-leave-to {
   opacity: 0;
+}
+
+.overlay-enter-active .overlay__panel {
+  transition: transform var(--dur-reveal) var(--ease-reveal);
+}
+
+.overlay-enter-from .overlay__panel {
+  transform: translateY(24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-enter-active .overlay__panel,
+  .overlay-enter-from .overlay__panel {
+    transition: none;
+    transform: none;
+  }
 }
 </style>

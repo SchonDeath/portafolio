@@ -1,0 +1,89 @@
+/* ─────────────────────────────────────────────────────────────
+ *  MOVIMIENTO
+ * ─────────────────────────────────────────────────────────────
+ *  Los cuatro gestos del inventario, como transiciones CSS. El disparo
+ *  lo da useEditorial con IntersectionObserver, que solo pone
+ *  [data-shown] en el elemento cuando entra en vista.
+ *
+ *  TODO ESTO VIVE BAJO [data-animate], que el composable escribe en
+ *  <html> al montarse. Si el JS no llega a ejecutarse —o si el visitante
+ *  pidió menos movimiento— el atributo nunca aparece, ninguna de estas
+ *  reglas se aplica y la página se ve en su estado final. Es la
+ *  diferencia entre una animación y un contenido que depende de JS para
+ *  ser visible.
+ * ──────────────────────────────────────────────────────────── */
+
+[data-animate] [data-line],
+[data-animate] [data-rise],
+[data-animate] [data-curtain],
+[data-animate] [data-rule] {
+  transition-duration: var(--dur-reveal);
+  transition-timing-function: var(--ease-reveal);
+  /* La propiedad concreta la declara cada gesto; esto solo evita
+     repetir duración y curva cuatro veces. */
+  transition-property: opacity, transform, clip-path;
+}
+
+/* ── 1. Revelado por líneas ──────────────────────────────────
+   La máscara es lo que lo separa de un fade: el texto emerge desde un
+   borde duro en vez de aparecer flotando. Aquí el recorte lo hace
+   clip-path sobre el bloque entero, sin partir el texto en nodos: un
+   titular de dos líneas no necesita dos animaciones para leerse bien, y
+   partirlo rompe la selección de texto y el copiado. */
+
+[data-animate] [data-line] {
+  clip-path: inset(0 0 105% 0);
+  transform: translateY(0.18em);
+}
+
+[data-animate] [data-line][data-shown] {
+  clip-path: inset(0 0 -20% 0);
+  transform: none;
+}
+
+/* ── 2. Bloques que suben ────────────────────────────────── */
+
+[data-animate] [data-rise] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+[data-animate] [data-rise][data-shown] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── 3. Cortina sobre imágenes ───────────────────────────── */
+
+[data-animate] [data-curtain] {
+  clip-path: inset(0 0 100% 0);
+  transition-duration: var(--dur-curtain);
+}
+
+[data-animate] [data-curtain][data-shown] {
+  clip-path: inset(0 0 0 0);
+}
+
+/* La imagen entra sobreescalada y vuelve a su tamaño: el desfase con la
+   cortina es lo que hace que se lea como un revelado y no como un wipe. */
+[data-animate] [data-curtain] img {
+  transform: scale(1.08);
+  transition: transform calc(var(--dur-curtain) + 200ms) var(--ease-reveal);
+}
+
+[data-animate] [data-curtain][data-shown] img {
+  transform: none;
+}
+
+/* ── 4. Filetes ──────────────────────────────────────────── */
+
+[data-animate] [data-rule] {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition-duration: var(--dur-rule);
+  transition-timing-function: var(--ease-rule);
+}
+
+[data-animate] [data-rule][data-shown] {
+  transform: scaleX(1);
+}

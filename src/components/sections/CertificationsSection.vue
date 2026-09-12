@@ -4,239 +4,247 @@ import { useEditorial } from '@/composables/useEditorial'
 import { certifications } from '@/data/profile'
 
 /**
- * Certificaciones como índice, no como muro de insignias.
+ * Formación, como tabla de registro.
  *
  * Once certificados puestos como tarjetas con logo llenan la pantalla y
- * no dicen nada: el visitante no compara cursos, busca si sabe lo que
- * necesita. Por eso se leen como una lista tipográfica agrupada por área
- * —Frontend, Backend, Datos, Herramientas— donde el título manda y el
- * emisor, la fecha y la duración quedan como dato de apoyo.
+ * no dicen nada: nadie compara cursos, se busca si sabe lo que hace
+ * falta. En tabla se recorren de un vistazo y el código de verificación
+ * queda donde debe estar — al lado de cada fila, no escondido.
  *
  * El filtro por área no es decorativo: con once filas es la diferencia
- * entre recorrer todo y ver de un golpe qué hay de frontend.
+ * entre recorrer todo y ver de golpe qué hay de frontend.
  */
 
 const root = ref<HTMLElement | null>(null)
 useEditorial(root)
 
-/** Áreas presentes, en orden fijo: el orden no debe bailar según los datos. */
+/** Orden fijo: no debe bailar según lleguen los datos. */
 const ORDER = ['Frontend', 'Backend', 'Datos', 'Herramientas', 'Título'] as const
 
-const areas = computed(() =>
-  ORDER.filter(area => certifications.some(item => item.area === area)),
-)
+const areas = computed(() => ORDER.filter((a) => certifications.some((c) => c.area === a)))
 
 const active = ref<string>('Todas')
 
 const visible = computed(() =>
   active.value === 'Todas'
     ? certifications
-    : certifications.filter(item => item.area === active.value),
+    : certifications.filter((item) => item.area === active.value),
 )
 
 /** Horas acreditadas: la suma dice más que el número de diplomas. */
 const totalHours = computed(() =>
-  Math.round(
-    certifications.reduce((sum, item) => sum + (parseFloat(item.hours ?? '0') || 0), 0),
-  ),
+  Math.round(certifications.reduce((sum, c) => sum + (parseFloat(c.hours ?? '0') || 0), 0)),
 )
 </script>
 
 <template>
-  <section
-    v-if="certifications.length"
-    ref="root"
-    id="certificaciones"
-    class="learning-section scroll-mt-24 py-28 sm:py-44"
-  >
+  <section v-if="certifications.length" id="formacion" ref="root" class="section ruled">
     <div class="shell">
-      <div class="flex items-center gap-6">
-        <p data-rise class="eyebrow whitespace-nowrap">04 — Certificaciones</p>
-        <span data-rule class="bg-line-strong h-px flex-1"></span>
-      </div>
-
-      <div class="mt-12 flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-        <h2
-          data-line
-          class="max-w-3xl text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.05] font-semibold tracking-[-0.03em]"
-        >
-          Siempre aprendiendo.
-        </h2>
-        <p data-rise class="text-content-subtle font-mono text-xs">
-          {{ certifications.length }} certificados / {{ totalHours }} horas
+      <header class="section-head">
+        <p class="meta">
+          <span class="section-number">05</span>
+          <span aria-hidden="true"> / </span>
+          <span>Formación</span>
         </p>
-      </div>
+        <p class="meta-xs">{{ certifications.length }} registros · {{ totalHours }} horas</p>
+      </header>
 
-      <!-- El filtro es un grupo de radio en la práctica: una sola opción
-           activa a la vez. `aria-pressed` lo hace explícito para quien
-           navega con lector de pantalla, donde el color no se ve. -->
-      <div data-rise class="mt-10 flex flex-wrap gap-2" role="group" aria-label="Filtrar por área">
-        <button
-          v-for="area in ['Todas', ...areas]"
-          :key="area"
-          type="button"
-          class="cert-filter"
-          :aria-pressed="active === area"
-          @click="active = area"
-        >
-          {{ area }}
-        </button>
-      </div>
+      <div class="certs__intro">
+        <h2 class="display-l" data-line>
+          Aprender<br />
+          <span class="serif-accent">es parte del trabajo.</span>
+        </h2>
 
-      <ul class="mt-12 border-t border-line">
-        <li
-          v-for="item in visible"
-          :key="item.title"
-          data-rise
-          class="cert-row border-b border-line"
-        >
-          <!-- Toda la fila es el enlace cuando hay algo que verificar, y
-               un div cuando no: un `a` sin href no es accesible por
-               teclado y anuncia un destino que no existe. -->
-          <component
-            :is="item.url ? 'a' : 'div'"
-            v-bind="item.url ? { href: item.url, target: '_blank', rel: 'noopener' } : {}"
-            class="cert-link"
+        <div class="certs__filter" role="group" aria-label="Filtrar por área">
+          <button
+            type="button"
+            class="certs__chip"
+            :class="{ 'is-active': active === 'Todas' }"
+            :aria-pressed="active === 'Todas'"
+            @click="active = 'Todas'"
           >
-            <span class="cert-area">{{ item.area }}</span>
+            Todas
+          </button>
+          <button
+            v-for="area in areas"
+            :key="area"
+            type="button"
+            class="certs__chip"
+            :class="{ 'is-active': active === area }"
+            :aria-pressed="active === area"
+            @click="active = area"
+          >
+            {{ area }}
+          </button>
+        </div>
+      </div>
 
-            <span class="min-w-0">
-              <span class="cert-title">{{ item.title }}</span>
-              <span class="cert-meta">
-                {{ item.issuer
-                }}<template v-if="item.instructor"> · {{ item.instructor }}</template>
-                <template v-if="item.hours"> · {{ item.hours }}</template>
-              </span>
-            </span>
+      <!-- El scroll horizontal es solo para la tabla, nunca para la
+           página: en móvil la columna de título se estrecharía hasta ser
+           ilegible si obligáramos a que todo entrase. -->
+      <div class="certs__scroll">
+        <table class="doc-table certs__table">
+          <caption class="visually-hidden">
+            Certificaciones y titulación, de la más reciente a la más antigua
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" class="certs__col-num">Nº</th>
+              <th scope="col">Título</th>
+              <th scope="col" class="certs__col-area">Área</th>
+              <th scope="col" class="certs__col-issuer">Emisor</th>
+              <th scope="col" class="certs__col-date">Fecha</th>
+              <th scope="col" class="certs__col-hours">Duración</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, i) in visible" :key="item.title">
+              <td class="certs__col-num">
+                <span class="meta-xs certs__num">{{ String(i + 1).padStart(2, '0') }}</span>
+              </td>
+              <td>
+                <a
+                  v-if="item.url"
+                  :href="item.url"
+                  target="_blank"
+                  rel="noopener"
+                  class="certs__title"
+                >
+                  <span class="underline-grow">{{ item.title }}</span>
+                  <span aria-hidden="true"> ↗</span>
+                  <span class="visually-hidden">(verificar certificado, se abre en otra pestaña)</span>
+                </a>
+                <span v-else class="certs__title">{{ item.title }}</span>
+                <span v-if="item.instructor" class="certs__instructor">{{ item.instructor }}</span>
+              </td>
+              <td class="certs__col-area">
+                <span class="meta-xs">{{ item.area }}</span>
+              </td>
+              <td class="certs__col-issuer">{{ item.issuer }}</td>
+              <td class="certs__col-date">{{ item.date }}</td>
+              <td class="certs__col-hours">{{ item.hours ?? '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-            <span class="cert-date">{{ item.date }}</span>
-
-            <span class="cert-verify">
-              <template v-if="item.url">
-                Verificar <span aria-hidden="true" class="cert-arrow">↗</span>
-                <span class="sr-only">el certificado de {{ item.title }} en Udemy</span>
-              </template>
-              <template v-else>Título profesional</template>
-            </span>
-          </component>
-        </li>
-      </ul>
+      <p class="meta-xs certs__note">
+        Los certificados de Udemy enlazan a su página de verificación.
+      </p>
     </div>
   </section>
 </template>
 
 <style scoped>
-.cert-filter {
-  padding: 7px 15px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  color: var(--content-muted);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition:
-    color 0.2s,
-    border-color 0.2s,
-    background-color 0.2s;
-}
-.cert-filter:hover {
-  color: var(--content-strong);
-  border-color: var(--accent);
-}
-.cert-filter[aria-pressed='true'] {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--surface-deep);
-}
-
-/* La fila es una grilla de cuatro columnas en escritorio; en móvil el
-   área y la fecha se apilan bajo el título, que es lo único que no
-   puede perderse. */
-.cert-link {
+.certs__intro {
   display: grid;
-  grid-template-columns: 108px 1fr auto auto;
-  align-items: baseline;
-  gap: 24px;
-  padding: 22px 4px;
-}
-.cert-area {
-  color: var(--content-faint);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.cert-title {
-  display: block;
-  color: var(--content-strong);
-  font-size: 17px;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-}
-.cert-meta {
-  display: block;
-  margin-top: 5px;
-  color: var(--content-muted);
-  font-size: 13px;
-}
-.cert-date {
-  color: var(--content-subtle);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  white-space: nowrap;
-}
-.cert-verify {
-  color: var(--content-subtle);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  white-space: nowrap;
-}
-a.cert-link:hover .cert-title {
-  color: var(--accent-bright);
-}
-a.cert-link:hover .cert-verify {
-  color: var(--accent-bright);
-}
-.cert-arrow {
-  display: inline-block;
-  transition: transform 0.2s var(--ease-out-expo);
-}
-a.cert-link:hover .cert-arrow {
-  transform: translate(2px, -2px);
-}
-.cert-link:focus-visible {
-  outline: 2px solid var(--accent-bright);
-  outline-offset: -2px;
+  gap: var(--space-6);
+  margin-bottom: var(--space-7);
 }
 
-@media (max-width: 767px) {
-  .cert-link {
+@media (min-width: 62rem) {
+  .certs__intro {
     grid-template-columns: 1fr auto;
-    gap: 6px 16px;
-    padding: 18px 2px;
-  }
-  /* El título toma el ancho completo y el resto se ordena debajo. */
-  .cert-area {
-    order: -1;
-    grid-column: 1 / -1;
-  }
-  .cert-link > span:nth-child(2) {
-    grid-column: 1 / -1;
-  }
-  .cert-date {
-    margin-top: 4px;
-  }
-  .cert-verify {
-    margin-top: 4px;
-    text-align: right;
+    gap: var(--space-8);
+    align-items: end;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .cert-arrow,
-  .cert-filter {
-    transition: none;
-  }
+.certs__filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.certs__chip {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: var(--step-meta-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  transition:
+    border-color var(--dur-ui) var(--ease-ui),
+    color var(--dur-ui) var(--ease-ui),
+    background-color var(--dur-ui) var(--ease-ui);
+}
+
+.certs__chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.certs__chip.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.certs__scroll {
+  overflow-x: auto;
+}
+
+.certs__table {
+  min-width: 46rem;
+}
+
+.certs__num {
+  color: var(--accent);
+}
+
+.certs__col-num {
+  width: 3rem;
+}
+
+.certs__col-area {
+  width: 8rem;
+}
+
+.certs__col-issuer {
+  width: 8rem;
+}
+
+.certs__col-date {
+  width: 11rem;
+}
+
+.certs__col-hours {
+  width: 7rem;
+}
+
+.certs__title {
+  display: block;
+  color: var(--ink);
+  font-weight: 500;
+  max-width: 44ch;
+}
+
+a.certs__title {
+  transition: color var(--dur-ui) var(--ease-ui);
+}
+
+a.certs__title:hover {
+  color: var(--accent);
+}
+
+.certs__instructor {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--step-body-s);
+  color: var(--ink-muted);
+}
+
+.certs__col-issuer,
+.certs__col-date,
+.certs__col-hours {
+  font-size: var(--step-body-s);
+  color: var(--ink-muted);
+}
+
+.certs__note {
+  margin-top: var(--space-5);
+  text-transform: none;
+  letter-spacing: 0.04em;
 }
 </style>

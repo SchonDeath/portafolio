@@ -116,9 +116,12 @@
   --space-10: 8rem;
   --space-11: 11rem;
 
-  /* Aire entre secciones: el vacío es lo que hace que el contenido se
-     lea como decidido y no como relleno. */
-  --section-gap: var(--space-9);
+  /* Aire entre secciones.
+     Es MEDIO hueco: se aplica arriba y abajo de cada sección, así que
+     entre dos secciones adyacentes se suman los dos. El valor visible
+     entre bloques es el doble de este número — con 88px aquí, el aire
+     real son 176px, que es la cifra del documento de dirección. */
+  --section-gap: var(--space-8);
 
   /* ── Rejilla ─────────────────────────────────────────────
      Doce columnas y un canal fijo. El margen crece por breakpoint en
@@ -142,13 +145,14 @@
 @media (min-width: 48rem) {
   :root {
     --gutter: 2.5rem;
-    --section-gap: var(--space-10);
+    --section-gap: var(--space-9);
   }
 }
 
 @media (min-width: 75rem) {
   :root {
     --gutter: 4rem;
-    --section-gap: var(--space-11);
+    /* 88px por lado = 176px entre secciones. */
+    --section-gap: 5.5rem;
   }
 }

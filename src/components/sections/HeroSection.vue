@@ -17,7 +17,8 @@ import { useEditorial } from '@/composables/useEditorial'
  */
 
 const root = ref<HTMLElement | null>(null)
-useEditorial(root, { start: 'top 95%' })
+// La portada dispara antes que el resto: ya está en pantalla al cargar.
+useEditorial(root, { rootMargin: '0px' })
 
 /** Año de inicio, para el dato de trayectoria sin escribirlo a mano. */
 const startYear = 2022

@@ -30,22 +30,22 @@
  * Además `FluidImage` las sube a una textura WebGL, y eso exige
  * mismo origen; servidas por el bundle siempre lo cumplen.
  */
-import bibliotecaBancoCentral from '@/assets/img/bibloteca_banco_central.png'
-import consorcioRentas from '@/assets/img/consorcio_rentas.png'
-import consorcioPolizas from '@/assets/img/consorcio_polizas.png'
-import consorcioSiniestros from '@/assets/img/consorcio_movimiento_siniestros.png'
+import bibliotecaBancoCentral from '@/assets/img/bibloteca_banco_central.webp'
+import consorcioRentas from '@/assets/img/consorcio_rentas.webp'
+import consorcioPolizas from '@/assets/img/consorcio_polizas.webp'
+import consorcioSiniestros from '@/assets/img/consorcio_movimiento_siniestros.webp'
 
 import logoBancoCentral from '@/assets/img/layout_set_logo.png'
 import logoConsorcio from '@/assets/img/logo_consorcio_2024.webp'
 import logoSii from '@/assets/img/logosii.png'
 import logoSonda from '@/assets/img/sonda_logo.jpg'
 import logoVass from '@/assets/img/vass_latam_logo.jpg'
-import bancoCentralCover from '@/assets/complement/edificio_banco_central.png'
-import rentasCover from '@/assets/complement/consorcio_rentas_vitalicias.png'
-import segurosCover from '@/assets/complement/consorcio_seguros.png'
-import titularesCover from '@/assets/complement/consorcio_movimiento_titular.png'
-import impuestosCover from '@/assets/complement/impuestos_indirectos_sii.png'
-import pascCover from '@/assets/complement/sii_pasc.png'
+import bancoCentralCover from '@/assets/complement/edificio_banco_central.webp'
+import rentasCover from '@/assets/complement/consorcio_rentas_vitalicias.webp'
+import segurosCover from '@/assets/complement/consorcio_seguros.webp'
+import titularesCover from '@/assets/complement/consorcio_movimiento_titular.webp'
+import impuestosCover from '@/assets/complement/impuestos_indirectos_sii.webp'
+import pascCover from '@/assets/complement/sii_pasc.webp'
 import logoTukiin from '@/assets/complement/tuking.png'
 
 export interface Project {

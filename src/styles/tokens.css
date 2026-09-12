@@ -1,0 +1,154 @@
+/* ─────────────────────────────────────────────────────────────
+ *  TOKENS
+ * ─────────────────────────────────────────────────────────────
+ *  Única capa de variables del sitio. Antes había tres compitiendo
+ *  —style.css en azul petróleo, un bloque «profesional» al final del
+ *  mismo archivo y creative.css en hueso/rojo bajo .portfolio-v2—, lo
+ *  que hacía imposible saber qué color ganaba sin abrir las tres.
+ *
+ *  Concepto: expediente técnico. Papel hueso, tinta casi negra, un rojo
+ *  de sello. Los nombres son de documento (paper, ink, rule) y no de
+ *  interfaz (surface, content, border) porque es lo que decide las dudas:
+ *  ante un caso nuevo, la pregunta es cómo se resolvería en un impreso.
+ *
+ *  CONTRASTE: todos los valores están medidos contra las tres superficies
+ *  de su tema, no estimados. El par más ajustado es --ink-faint sobre
+ *  --paper-sunk, 4.65:1. Si tocas un tono, vuelve a medir: el gris de
+ *  metadatos que pedía el diseño a ojo (#8a8c82) daba 2.85 y fallaba.
+ * ──────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* Superficies. El papel es cálido a propósito: un blanco puro compite
+     con el rojo del acento y vuelve gris a la tinta. */
+  --paper: #eeeae3;
+  --paper-sunk: #e5e0d7;
+  --paper-raised: #f6f3ee;
+
+  /* Tinta, del titular al metadato. */
+  --ink: #1a1b19; /* 14.42 */
+  --ink-body: #33352f; /* 10.36 */
+  --ink-muted: #5f6159; /* 5.24 */
+  --ink-faint: #616359; /* 5.10 */
+
+  /* Acento. Dos tonos con papeles distintos y no intercambiables:
+     --accent es el único que puede llevar texto; --accent-vivid es más
+     luminoso, no alcanza AA en cuerpo y vive solo en filetes y
+     subrayados, donde el mínimo es 3:1 y da 4.18. */
+  --accent: #9e2f1c; /* 6.09 */
+  --accent-vivid: #c4441f; /* 4.18 — nunca texto */
+
+  /* Líneas. En alfa para que sirvan sobre cualquier superficie sin
+     declarar una variante por nivel. */
+  --rule: rgb(26 27 25 / 0.13);
+  --rule-strong: rgb(26 27 25 / 0.25);
+
+  /* El texto oscuro sobre papel claro se ve más fino de lo que es. */
+  --weight-body: 400;
+  --weight-display: 700;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: #161917;
+  --paper-sunk: #111412;
+  --paper-raised: #1f2320;
+
+  --ink: #efebe4; /* 14.91 */
+  --ink-body: #d3d3ca; /* 11.76 */
+  --ink-muted: #a4a89d; /* 7.31 */
+  --ink-faint: #8d9287; /* 5.56 */
+
+  /* En oscuro el rojo tiene que subir de luminosidad para leerse; el
+     salmón resultante conserva el papel de sello sin vibrar. */
+  --accent: #f28f74; /* 7.55 */
+  --accent-vivid: #f7a184; /* 8.76 */
+
+  --rule: rgb(239 235 228 / 0.13);
+  --rule-strong: rgb(239 235 228 / 0.26);
+
+  /* Texto claro sobre fondo oscuro se ve más grueso: medio grado menos. */
+  --weight-body: 350;
+  --weight-display: 650;
+}
+
+:root {
+  /* ── Tipografía ──────────────────────────────────────────
+     Dos familias. Space Grotesk para display —grotesca con detalles
+     mecánicos que a 13vw muestra carácter sin volverse decorativa— y
+     Fira para todo lo demás, que nació para interfaces técnicas y trae
+     su propia monoespaciada: la etiqueta (01) y el párrafo son
+     parientes visibles, no dos tipografías que coinciden.
+
+     Manrope se eliminó: solapaba con Fira Sans sin aportar. */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, Consolas, monospace;
+  --font-serif: Georgia, 'Times New Roman', serif;
+
+  /* Escala. Los clamp llevan el titular de 3.5rem en un móvil a 11rem en
+     escritorio; el tracking negativo crece con el tamaño porque el
+     espaciado que funciona en cuerpo abre demasiado en display. */
+  --step-display-xl: clamp(3.5rem, 13vw, 11rem);
+  --step-display-l: clamp(2.25rem, 6vw, 4.75rem);
+  --step-display-m: clamp(1.5rem, 3vw, 2.25rem);
+  --step-lead: clamp(1.05rem, 1.9vw, 1.35rem);
+  --step-body: 1rem;
+  --step-body-s: 0.875rem;
+  --step-meta: 0.6875rem;
+  --step-meta-xs: 0.625rem;
+
+  /* ── Espaciado ───────────────────────────────────────────
+     Base 4px. El salto de --space-7 en adelante es el que produce el
+     aire de documento; por debajo es la escala de componente. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --space-11: 11rem;
+
+  /* Aire entre secciones: el vacío es lo que hace que el contenido se
+     lea como decidido y no como relleno. */
+  --section-gap: var(--space-9);
+
+  /* ── Rejilla ─────────────────────────────────────────────
+     Doce columnas y un canal fijo. El margen crece por breakpoint en
+     --gutter, así que el contenedor no necesita media queries propias. */
+  --grid-columns: 12;
+  --grid-gap: 1.5rem;
+  --gutter: 1.25rem;
+  --measure: 1440px;
+
+  /* ── Movimiento ──────────────────────────────────────────
+     Cuatro curvas para cuatro gestos. No hay una quinta. */
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-rule: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-ui: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-reveal: 700ms;
+  --dur-rule: 500ms;
+  --dur-curtain: 800ms;
+  --dur-ui: 280ms;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2.5rem;
+    --section-gap: var(--space-10);
+  }
+}
+
+@media (min-width: 75rem) {
+  :root {
+    --gutter: 4rem;
+    --section-gap: var(--space-11);
+  }
+}

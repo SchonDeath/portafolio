@@ -1,0 +1,183 @@
+/* ─────────────────────────────────────────────────────────────
+ *  COMPONENTES COMPARTIDOS
+ * ─────────────────────────────────────────────────────────────
+ *  Lo que usan varias secciones. Lo propio de una sección vive en su
+ *  .vue; aquí solo lo que se repite, para que no haya dos definiciones
+ *  del mismo subrayado en archivos distintos.
+ * ──────────────────────────────────────────────────────────── */
+
+/* ── Subrayado en hover ──────────────────────────────────────
+   Uno de los cuatro gestos del inventario. Se dibuja desde la izquierda
+   con scaleX en vez de animar `width`: transform no provoca reflow, así
+   que el navegador lo resuelve en el compositor. */
+
+.underline-grow {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-grow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.2em;
+  height: 1px;
+  background: var(--accent-vivid);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-ui) var(--ease-ui);
+}
+
+.underline-grow:hover::after,
+a:hover .underline-grow::after,
+button:hover .underline-grow::after,
+:focus-visible > .underline-grow::after {
+  transform: scaleX(1);
+}
+
+/* ── Acciones ────────────────────────────────────────────────
+   Dos niveles. La primaria es tinta sólida —en un impreso, el sello—;
+   la secundaria es solo un contorno. Ambas rectangulares: el redondeo
+   pertenece al lenguaje de app, no al de documento. */
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--step-meta);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition:
+    background-color var(--dur-ui) var(--ease-ui),
+    border-color var(--dur-ui) var(--ease-ui),
+    color var(--dur-ui) var(--ease-ui);
+}
+
+.action--primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.action--primary:hover {
+  background: var(--accent);
+}
+
+.action--ghost {
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+}
+
+.action--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* La flecha se desplaza en hover: señal de dirección sin animar el
+   contenedor, que arrastraría el texto. */
+.action__arrow {
+  transition: transform var(--dur-ui) var(--ease-ui);
+}
+
+.action:hover .action__arrow {
+  transform: translateX(3px);
+}
+
+/* ── Etiquetas de tecnología ─────────────────────────────────
+   Sin fondo ni borde: solo texto monoespaciado separado por un punto
+   medio. Las píldoras con caja son el reflejo automático de un portafolio
+   y aquí sumarían doce rectángulos por ficha compitiendo con la rejilla. */
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+
+.tag-list li {
+  font-family: var(--font-mono);
+  font-size: var(--step-meta);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.tag-list li + li::before {
+  content: '·';
+  margin-right: var(--space-4);
+  color: var(--rule-strong);
+}
+
+/* ── Tabla de documento ──────────────────────────────────────
+   La usan Trayectoria y Formación. Filas separadas por filete, sin
+   zebra: el rayado alterno es de hoja de cálculo, no de expediente. */
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.doc-table th {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--rule-strong);
+  font-family: var(--font-mono);
+  font-size: var(--step-meta-xs);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: left;
+}
+
+.doc-table td {
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+
+/* ── Estado ──────────────────────────────────────────────────
+   El punto de disponibilidad. Único elemento con color propio fuera de
+   la paleta: verde porque «disponible» tiene un color convencional y
+   discutirlo no aporta nada. */
+
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6a9c3a;
+  flex-shrink: 0;
+}
+
+[data-theme='dark'] .status-dot {
+  background: #9ecf5f;
+}
+
+/* ── Cortina de imagen ───────────────────────────────────────
+   Estado inicial del gesto [data-curtain]. El clip-path lo anima GSAP;
+   aquí no se declara oculto a propósito: si el JS falla, la imagen tiene
+   que verse igual. */
+
+.curtain {
+  overflow: hidden;
+  background: var(--paper-sunk);
+}
+
+.curtain img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── SplitText ───────────────────────────────────────────────
+   GSAP envuelve cada línea en su propio div, y ese div no hereda el
+   espacio para tildes y descendentes del elemento original. Sin esto,
+   las mayúsculas acentuadas (Á, É) se cortan contra el borde de la
+   máscara — el defecto que delata una animación de texto mal hecha. */
+
+.split-line {
+  padding-top: 0.12em;
+  padding-bottom: 0.12em;
+}

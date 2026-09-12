@@ -14,8 +14,12 @@ const STORAGE_KEY = 'theme'
  * La primera pintura la resuelve un script en index.html, antes de que
  * Vue monte. Aquí solo tomamos lo que ese script ya dejó en el DOM, para
  * no reintroducir el parpadeo que precisamente evita.
+ *
+ * El defecto es claro: el concepto del sitio es un documento impreso y el
+ * papel es su estado natural. Este valor casi nunca se usa —el script de
+ * arranque ya dejó el suyo en el DOM— pero tiene que coincidir con él.
  */
-const theme = ref<Theme>('dark')
+const theme = ref<Theme>('light')
 
 /** true mientras el visitante no ha elegido: seguimos al sistema. */
 let followsSystem = true
@@ -52,9 +56,9 @@ export function useTheme() {
 
   // Si el visitante no ha elegido, el sitio sigue al sistema en vivo:
   // cambiar el tema del SO de día a noche se refleja sin recargar.
-  const media = window.matchMedia('(prefers-color-scheme: light)')
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
   media.addEventListener('change', (e) => {
-    if (followsSystem) theme.value = e.matches ? 'light' : 'dark'
+    if (followsSystem) theme.value = e.matches ? 'dark' : 'light'
   })
 
   return { theme, toggle }

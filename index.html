@@ -4,21 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#04070f" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eeeae3" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161917" />
 
-    <!-- TODO: ajusta título y descripción a tu nombre y perfil -->
-    <title>Sebastián González — Full-Stack Developer</title>
+    <title>Sebastián González — Desarrollador Full-Stack</title>
     <meta
       name="description"
-      content="Sebastián González, desarrollador full-stack especializado en frontend. Proyectos para banca, seguros y sector público con Vue, TypeScript y Java."
+      content="Sebastián González, desarrollador full-stack especializado en frontend. Sistemas para el Banco Central de Chile, Consorcio y el Servicio de Impuestos Internos."
     />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Sebastián González — Full-Stack Developer" />
+    <meta property="og:title" content="Sebastián González — Desarrollador Full-Stack" />
     <meta
       property="og:description"
-      content="Interfaces y sistemas para banca, seguros y sector público. Conoce los proyectos y la experiencia de Sebastián González."
+      content="Interfaces y sistemas críticos para banca, seguros y sector público. Banco Central de Chile, Consorcio, Servicio de Impuestos Internos."
     />
     <!-- TODO: imagen social 1200×630px en /public/img/og.svg -->
     <meta property="og:image" content="/img/og.svg" />
@@ -26,22 +25,29 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Dos familias: Space Grotesk para display, Fira para texto y
+         metadatos. Manrope se eliminó en el rediseño — solapaba con Fira
+         Sans sin aportar, y eran 4 pesos de descarga. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Fira+Code:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Fira+Sans:ital,wght@0,350;0,400;0,500;1,400&family=Fira+Code:wght@400&display=swap"
       rel="stylesheet"
     />
 
     <!-- Tema, resuelto antes de la primera pintura.
          Va inline y sin defer a propósito: si esperara al bundle de Vue,
-         el visitante en tema claro vería un fogonazo oscuro en cada carga. -->
+         el visitante en tema oscuro vería un fogonazo de papel claro en
+         cada carga.
+
+         El defecto es claro, no oscuro: el concepto del sitio es un
+         documento impreso, y el papel es su estado natural. -->
     <script>
       ;(function () {
         try {
           var saved = localStorage.getItem('theme')
-          var system = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+          var system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
           document.documentElement.dataset.theme = saved || system
         } catch (e) {
-          document.documentElement.dataset.theme = 'dark'
+          document.documentElement.dataset.theme = 'light'
         }
       })()
     </script>

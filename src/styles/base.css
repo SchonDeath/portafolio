@@ -1,0 +1,258 @@
+/* ─────────────────────────────────────────────────────────────
+ *  BASE
+ * ─────────────────────────────────────────────────────────────
+ *  Reset corto y tipografía por defecto. Lo que antes hacía el reset de
+ *  Tailwind, en las veinte reglas que el sitio usaba de verdad.
+ * ──────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* El scroll suave lo maneja GSAP; nativo como respaldo para los saltos
+     por ancla si el JS aún no cargó. */
+  scroll-behavior: smooth;
+  background: var(--paper);
+}
+
+body {
+  min-height: 100svh;
+  background: var(--paper);
+  color: var(--ink-body);
+  font-family: var(--font-sans);
+  font-size: var(--step-body);
+  font-weight: var(--weight-body);
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Solo color: animar más provoca saltos de layout al conmutar tema. */
+  transition:
+    background-color 400ms var(--ease-ui),
+    color 400ms var(--ease-ui);
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Tailwind v4 dejaba los <button> con el cursor por defecto del sistema.
+   En una página donde casi nada es un control, esa flecha quita la única
+   señal de que algo se puede pulsar. */
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+label[for],
+summary {
+  cursor: pointer;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+/* Bloqueo de scroll mientras una ficha a pantalla completa está al
+   frente. Sin esto, la rueda del ratón mueve el documento de detrás
+   mientras se lee el anexo. */
+body.is-locked {
+  overflow: hidden;
+}
+
+/* ── Tipografía ──────────────────────────────────────────── */
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Escala de display. Las clases nombran el rol, no el tamaño: un titular
+   de sección sigue siendo display-l aunque mañana cambie su clamp. */
+
+.display-xl {
+  font-family: var(--font-display);
+  font-size: var(--step-display-xl);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.86;
+}
+
+.display-l {
+  font-family: var(--font-display);
+  font-size: var(--step-display-l);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.94;
+}
+
+.display-m {
+  font-family: var(--font-display);
+  font-size: var(--step-display-m);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+}
+
+.lead {
+  font-size: var(--step-lead);
+  letter-spacing: -0.01em;
+  line-height: 1.55;
+  color: var(--ink-body);
+}
+
+.body-s {
+  font-size: var(--step-body-s);
+  line-height: 1.6;
+}
+
+/* Metadatos monoespaciados: el elemento firma del concepto. Siempre en
+   mayúsculas — a este tamaño las minúsculas con tracking abierto se
+   leen como error de composición. */
+
+.meta,
+.meta-xs {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.meta {
+  font-size: var(--step-meta);
+  letter-spacing: 0.14em;
+}
+
+.meta-xs {
+  font-size: var(--step-meta-xs);
+  letter-spacing: 0.18em;
+}
+
+/* Una palabra en cursiva serif por sección, como máximo. Rompe la
+   uniformidad de la grotesca justo lo suficiente para que el titular
+   tenga un acento; usada dos veces deja de ser un acento. */
+.serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* ── Foco ────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ── Barra de scroll ─────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper-sunk);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border: 3px solid var(--paper-sunk);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ── Accesibilidad ───────────────────────────────────────── */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Enlace de salto: invisible hasta que el teclado lo alcanza. */
+.skip-link {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--step-meta);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Con reduce-motion no se anima nada: useEditorial sale antes de crear
+   ningún trigger y el marcado ya es su propio estado final, así que aquí
+   solo quedan las transiciones decorativas de CSS. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

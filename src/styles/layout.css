@@ -1,0 +1,124 @@
+/* ─────────────────────────────────────────────────────────────
+ *  REJILLA Y ESTRUCTURA
+ * ─────────────────────────────────────────────────────────────
+ *  Doce columnas que se ven. En un portafolio de agencia la rejilla es
+ *  andamiaje que se esconde; aquí es el motivo visual: un expediente se
+ *  reconoce porque sus campos están tabulados y numerados.
+ * ──────────────────────────────────────────────────────────── */
+
+.shell {
+  width: min(100% - (2 * var(--gutter)), var(--measure));
+  margin-inline: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+/* Reparto por defecto, asimétrico: el título ocupa la izquierda corta y
+   el cuerpo la derecha larga. En móvil todo cae a una columna, que es lo
+   que evita las media queries repetidas por sección. */
+
+.col-title {
+  grid-column: 1 / -1;
+}
+
+.col-body {
+  grid-column: 1 / -1;
+}
+
+.col-full {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 62rem) {
+  .col-title {
+    grid-column: 1 / 5;
+  }
+
+  .col-body {
+    grid-column: 6 / -1;
+  }
+}
+
+/* ── Sección ─────────────────────────────────────────────── */
+
+.section {
+  position: relative;
+  padding-block: var(--section-gap);
+  border-top: 1px solid var(--rule);
+}
+
+.section:first-of-type {
+  border-top: 0;
+}
+
+/* Cabecera de sección: número, título y una nota al margen. El número
+   monoespaciado es lo que convierte una lista de bloques en un índice. */
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-7);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+.section-number {
+  color: var(--accent);
+}
+
+/* ── Filetes de rejilla ──────────────────────────────────────
+   Las líneas verticales que recorren la sección de arriba abajo. Van en
+   un pseudo-elemento con repeating-linear-gradient en vez de doce divs:
+   no añaden nodos, no se pueden enfocar y desaparecen solas cuando la
+   rejilla colapsa a una columna.
+
+   Solo en escritorio: a menos de 62rem el reparto es de una columna y
+   las líneas dejarían de coincidir con nada. */
+
+.ruled {
+  position: relative;
+}
+
+@media (min-width: 62rem) {
+  .ruled::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0;
+    pointer-events: none;
+    /* Una línea al inicio de cada columna. El cálculo replica el reparto
+       de la rejilla: ancho de columna = (100% - 11 canales) / 12. */
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--rule) 0 1px,
+      transparent 1px calc((100% + var(--grid-gap)) / var(--grid-columns))
+    );
+    opacity: 0.55;
+  }
+
+  /* El contenido va por encima de los filetes. */
+  .ruled > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* ── Filete horizontal animado ───────────────────────────────
+   El gesto [data-rule] de useEditorial lo escala desde la izquierda. */
+
+.rule {
+  height: 1px;
+  background: var(--rule-strong);
+  transform-origin: left center;
+}
+
+.rule--accent {
+  background: var(--accent-vivid);
+  height: 2px;
+}

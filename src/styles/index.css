@@ -1,0 +1,7 @@
+/* Orden de carga: tokens primero —todo lo demás los consume—, luego el
+   reset y la tipografía, después la estructura y por último lo que se
+   compone sobre ella. Cambiar el orden rompe la cascada sin avisar. */
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';

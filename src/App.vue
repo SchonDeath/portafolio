@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import ProjectOverlay from '@/components/ProjectOverlay.vue'
 import SiteNav from '@/components/SiteNav.vue'
 import HeroSection from '@/components/sections/HeroSection.vue'
 import ClientsSection from '@/components/sections/ClientsSection.vue'
-import ProjectsSection from '@/components/sections/ProjectsSection.vue'
 import ExperienceSection from '@/components/sections/ExperienceSection.vue'
 import AboutSection from '@/components/sections/AboutSection.vue'
 import CertificationsSection from '@/components/sections/CertificationsSection.vue'
 import ContactSection from '@/components/sections/ContactSection.vue'
-import { useProjectOverlay } from '@/composables/useProjectOverlay'
 
 /**
  * El sitio arranca en su contenido.
@@ -19,8 +16,6 @@ import { useProjectOverlay } from '@/composables/useProjectOverlay'
  * propio hero, que está en el DOM desde el primer byte y se lee aunque
  * el JS no llegue a ejecutarse.
  */
-
-const { activeProject, activeIndex, close } = useProjectOverlay()
 </script>
 
 <template>
@@ -30,14 +25,17 @@ const { activeProject, activeIndex, close } = useProjectOverlay()
 
   <main id="contenido">
     <HeroSection />
-    <ClientsSection />
-    <ProjectsSection />
-    <ExperienceSection />
-    <AboutSection />
-    <CertificationsSection />
+    <!-- Pasada la portada, la paleta Ministerio (tokens.css → .ministerio). -->
+    <div class="ministerio">
+      <ClientsSection />
+      <ExperienceSection />
+      <AboutSection />
+      <CertificationsSection />
+    </div>
   </main>
 
-  <ContactSection />
+  <div class="ministerio">
+    <ContactSection />
+  </div>
 
-  <ProjectOverlay :project="activeProject" :index="activeIndex()" @close="close" />
 </template>

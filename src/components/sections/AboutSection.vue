@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useEditorial } from '@/composables/useEditorial'
 import { profile, skills } from '@/data/profile'
+import cieloAndes from '@/assets/collage/cielo.webp'
 
 /**
  * Perfil.
@@ -13,6 +14,9 @@ import { profile, skills } from '@/data/profile'
  * «07 proyectos con contexto»): son recuentos de lo que la propia página
  * ya lista, presentados con el tamaño de una métrica de impacto. Un
  * número que el lector puede contar solo no es un dato, es relleno.
+ *
+ * Bajo el titular, un recorte fijo del cielo andino de la portada: el
+ * mismo horizonte, sin vídeo, para que la página siga siendo una sola.
  */
 
 const root = ref<HTMLElement | null>(null)
@@ -20,11 +24,16 @@ useEditorial(root)
 </script>
 
 <template>
-  <section id="perfil" ref="root" class="section ruled">
+  <section id="perfil" ref="root" class="section ruled about">
+    <!-- El cielo andino de la portada como fondo de toda la sección; el
+         contenido va encima con la tinta clara de la noche. -->
+    <img class="about__bg" :src="cieloAndes" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+    <div class="about__veil" aria-hidden="true" />
+
     <div class="shell">
       <header class="section-head">
         <p class="meta">
-          <span class="section-number">04</span>
+          <span class="section-number">03</span>
           <span aria-hidden="true"> / </span>
           <span>Perfil</span>
         </p>
@@ -79,6 +88,50 @@ useEditorial(root)
 </template>
 
 <style scoped>
+/* Tinta clara en toda la sección: redefinir los tokens deja resueltos
+   titular, párrafos, tabla y botón sin repetir cada color. */
+.about {
+  --ink: #ffffff;
+  --ink-body: #ffffff;
+  --ink-muted: #ffffff;
+  --ink-faint: #ffffff;
+  --accent: #ffffff;
+  --rule: rgb(255 255 255 / 0.18);
+  --rule-strong: rgb(255 255 255 / 0.32);
+
+  isolation: isolate;
+  overflow: hidden;
+  background: #0e1626;
+  color: var(--ink-body);
+}
+
+.about__bg {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* El horizonte encendido queda en la parte baja de la sección. */
+  object-position: center 70%;
+  pointer-events: none;
+}
+
+/* Velo: oscuro arriba, donde está el texto largo, y más abierto al pie
+   para que se vea el naranja del horizonte detrás de la tabla. */
+.about__veil {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(10 16 30 / 0.8) 0%,
+    rgb(10 16 30 / 0.65) 50%,
+    rgb(10 16 30 / 0.55) 100%
+  );
+  pointer-events: none;
+}
+
 .about__grid {
   display: grid;
   gap: var(--space-6);
@@ -90,6 +143,10 @@ useEditorial(root)
     gap: var(--space-8);
     align-items: start;
   }
+}
+
+.about__grid .display-l {
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.35);
 }
 
 .about__cv {

@@ -125,7 +125,7 @@ button:hover .underline-grow::after,
   font-family: var(--font-mono);
   font-size: var(--step-meta-xs);
   font-weight: 400;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-faint);
   text-align: left;

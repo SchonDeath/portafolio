@@ -25,11 +25,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Dos familias: Space Grotesk para display, Fira para texto y
-         metadatos. Manrope se eliminó en el rediseño — solapaba con Fira
-         Sans sin aportar, y eran 4 pesos de descarga. -->
+    <!-- Space Grotesk para display, Fira para texto y metadatos, y
+         Newsreader como serif editorial: la voz de la portada y de los
+         titulares de collage. Manrope se eliminó en el rediseño — solapaba
+         con Fira Sans sin aportar. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Fira+Sans:ital,wght@0,350;0,400;0,500;1,400&family=Fira+Code:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,350;0,400;0,500;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
 
@@ -49,6 +50,31 @@
         } catch (e) {
           document.documentElement.dataset.theme = 'light'
         }
+      })()
+
+      // Pantalla de bienvenida. Se decide aquí, antes de pintar, por lo
+      // mismo que el tema: si esperara a Vue, la portada completa se vería
+      // un instante y luego se cerraría. Sale en cada carga, recargas
+      // incluidas, salvo a quien llega con un ancla (#proyectos): ese
+      // visitante ya sabe adónde va. Sin JS el atributo no existe y la
+      // portada se ve entera.
+      //
+      // Una recarga (F5) siempre la muestra, aunque la dirección conserve
+      // el #ancla del último enlace del índice: ahí el ancla la dejó el
+      // propio visitante, no un enlace externo.
+      ;(function () {
+        var reload = false
+        try {
+          var nav = performance.getEntriesByType('navigation')[0]
+          reload = !!nav && nav.type === 'reload'
+        } catch (e) {}
+        if (location.hash && !reload) return
+        document.documentElement.setAttribute('data-intro', '')
+        if (location.hash) history.replaceState(null, '', location.pathname + location.search)
+        // El navegador restauraría el scroll de antes de recargar, y con la
+        // página bloqueada la bienvenida quedaría fuera de la pantalla.
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+        window.scrollTo(0, 0)
       })()
     </script>
   </head>

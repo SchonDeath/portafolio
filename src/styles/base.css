@@ -90,6 +90,13 @@ body.is-locked {
   overflow: hidden;
 }
 
+/* La bienvenida de la portada ocupa la pantalla y bloquea el scroll hasta
+   que se entra: cualquier gesto de avanzar la abre (HeroSection). */
+html[data-intro],
+html[data-intro] body {
+  overflow: hidden;
+}
+
 /* ── Tipografía ──────────────────────────────────────────── */
 
 h1,
@@ -165,7 +172,7 @@ p {
 
 .meta-xs {
   font-size: var(--step-meta-xs);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
 }
 
 /* Una palabra en cursiva serif por sección, como máximo. Rompe la
@@ -255,4 +262,30 @@ p {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Recorte de collage fuera de la portada: el mismo papel y el mismo grano,
+   en pequeño. Decorativo; quien lo usa pone aria-hidden. */
+.collage-strip {
+  position: relative;
+  overflow: hidden;
+  background: var(--rule);
+}
+
+.collage-strip img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.collage-strip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.28;
+  mix-blend-mode: overlay;
+  pointer-events: none;
 }

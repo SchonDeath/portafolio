@@ -122,3 +122,21 @@
   background: var(--accent-vivid);
   height: 2px;
 }
+
+/* Ministerio: sin filetes de columna; el titular va ligero y el
+   acento, en vez de cursiva serif, es la misma familia en seminegrita. */
+.ministerio .ruled::before {
+  content: none;
+}
+
+.ministerio .serif-accent {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ministerio .display-l,
+.ministerio .display-m {
+  font-weight: 300;
+  letter-spacing: -0.025em;
+}

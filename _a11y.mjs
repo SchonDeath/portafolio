@@ -8,6 +8,7 @@ const bad = m => { fails.push(m); console.log('FALLA ' + m) }
 {
   const p = await b.newPage({ viewport: { width: 1440, height: 1000 } })
   await p.goto('http://localhost:4173/', { waitUntil: 'networkidle' })
+  await p.evaluate(() => document.querySelector('.hero__enter')?.click()) // pasa la bienvenida
   await p.waitForTimeout(3600)
   const row = p.locator('.projects__row').first()
   await row.scrollIntoViewIfNeeded()
@@ -32,8 +33,9 @@ const bad = m => { fails.push(m); console.log('FALLA ' + m) }
 {
   const p = await b.newPage({ viewport: { width: 1440, height: 1000 } })
   await p.goto('http://localhost:4173/', { waitUntil: 'networkidle' })
+  await p.evaluate(() => document.querySelector('.hero__enter')?.click()) // pasa la bienvenida
   await p.waitForTimeout(3600)
-  const row = p.locator('.clients__row').first()
+  const row = p.locator('.clients .panel').first()
   await row.scrollIntoViewIfNeeded(); await row.click(); await p.waitForTimeout(500)
   const inert = await p.evaluate(() => document.getElementById('contenido')?.inert)
   inert ? ok('overlay cliente: contenido de fondo con inert') : bad('overlay cliente: el fondo NO esta inerte')
@@ -48,6 +50,7 @@ const bad = m => { fails.push(m); console.log('FALLA ' + m) }
   const ctx = await b.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' })
   const p = await ctx.newPage()
   await p.goto('http://localhost:4173/', { waitUntil: 'networkidle' })
+  await p.evaluate(() => document.querySelector('.hero__enter')?.click()) // pasa la bienvenida
   await p.waitForTimeout(600)
   const anim = await p.evaluate(() => document.documentElement.hasAttribute('data-animate'))
   !anim ? ok('reduce-motion: no se activa la capa de animacion') : bad('reduce-motion: data-animate presente')
@@ -62,6 +65,7 @@ const bad = m => { fails.push(m); console.log('FALLA ' + m) }
 {
   const p = await b.newPage({ viewport: { width: 1440, height: 1000 } })
   await p.goto('http://localhost:4173/', { waitUntil: 'networkidle' })
+  await p.evaluate(() => document.querySelector('.hero__enter')?.click()) // pasa la bienvenida
   await p.keyboard.press('Tab')
   const first = await p.evaluate(() => document.activeElement?.className || '')
   first.includes('skip-link') ? ok('primer Tab enfoca el enlace de salto') : bad('primer Tab = ' + first)
@@ -72,6 +76,7 @@ const bad = m => { fails.push(m); console.log('FALLA ' + m) }
 {
   const p = await b.newPage({ viewport: { width: 1440, height: 1000 } })
   await p.goto('http://localhost:4173/', { waitUntil: 'networkidle' })
+  await p.evaluate(() => document.querySelector('.hero__enter')?.click()) // pasa la bienvenida
   await p.waitForTimeout(3600)
   const h = await p.evaluate(() => {
     const hs = [...document.querySelectorAll('h1,h2,h3,h4')].map(e => +e.tagName[1])

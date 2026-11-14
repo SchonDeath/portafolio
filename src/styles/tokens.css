@@ -31,7 +31,7 @@
   --ink: #1a1b19; /* 14.42 */
   --ink-body: #33352f; /* 10.36 */
   --ink-muted: #5f6159; /* 5.24 */
-  --ink-faint: #616359; /* 5.10 */
+  --ink-faint: #000000;
 
   /* Acento. Dos tonos con papeles distintos y no intercambiables:
      --accent es el único que puede llevar texto; --accent-vivid es más
@@ -60,7 +60,7 @@
   --ink: #efebe4; /* 14.91 */
   --ink-body: #d3d3ca; /* 11.76 */
   --ink-muted: #a4a89d; /* 7.31 */
-  --ink-faint: #8d9287; /* 5.56 */
+  --ink-faint: #efebe4; /* en oscuro, igual que --ink */
 
   /* En oscuro el rojo tiene que subir de luminosidad para leerse; el
      salmón resultante conserva el papel de sello sin vibrar. */
@@ -84,10 +84,29 @@
      parientes visibles, no dos tipografías que coinciden.
 
      Manrope se eliminó: solapaba con Fira Sans sin aportar. */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-display: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
   --font-sans: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
-  --font-mono: 'Fira Code', ui-monospace, Consolas, monospace;
-  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-mono: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-serif: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+  /* Serif editorial de la portada y los collages. Es la única que
+     aguanta titular a 7rem sobre una fotografía sin volverse frágil. */
+  --font-editorial: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+
+  /* Noche de la portada. No depende del tema: el horizonte es la misma
+     fotografía en claro y en oscuro, y el texto sobre ella también. */
+  --night: #0b0a0c;
+  --night-ink: #f3ede2;
+  --night-ink-muted: #d9d0c1;
+  --night-rule: rgb(243 237 226 / 0.45);
+
+  /* Ancho de las tiras de collage a los lados de la portada: una astilla
+     en móvil, un panel en escritorio. Lo leen la portada y la cabecera,
+     que sobre ella se estrecha para no montar texto encima del papel. */
+  --collage-strip: 16px;
+
+  /* Grano de película, como textura SVG: une el vídeo limpio con los
+     papeles escaneados del collage. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 
   /* Escala. Los clamp llevan el titular de 3.5rem en un móvil a 11rem en
      escritorio; el tracking negativo crece con el tamaño porque el
@@ -144,6 +163,7 @@
 
 @media (min-width: 48rem) {
   :root {
+    --collage-strip: clamp(48px, 8.5vw, 132px);
     --gutter: 2.5rem;
     --section-gap: var(--space-9);
   }
@@ -155,4 +175,67 @@
     /* 88px por lado = 176px entre secciones. */
     --section-gap: 5.5rem;
   }
+}
+
+/* ─────────────────────────────────────────────────────────────
+ *  MINISTERIO
+ * ─────────────────────────────────────────────────────────────
+ *  Pasada la portada, el sitio sale del collage y entra en una paleta
+ *  institucional: blanco frío, tinta azul marino y un solo azul de
+ *  acento, con Fira Sans en todos los papeles. Es el registro de un
+ *  documento de servicio público, que es donde vive el trabajo.
+ *
+ *  La portada conserva su noche y sus papeles: la bienvenida no cambia.
+ *
+ *  Se resuelve redefiniendo los mismos tokens dentro de .ministerio, así
+ *  que cada sección se recolorea sin tocar su CSS.
+ * ──────────────────────────────────────────────────────────── */
+
+.ministerio {
+  --paper: #f4f6f8;
+  --paper-sunk: #e9edf2;
+  --paper-raised: #ffffff;
+
+  --ink: #12223f; /* 14.6 */
+  --ink-body: #2b3a52;
+  --ink-muted: #4f5b6e; /* 6.4 */
+  --ink-faint: #000000;
+
+  --accent: #1f4f8f; /* 7.7 */
+  --accent-vivid: #2f6fc4;
+
+  --rule: rgb(18 34 63 / 0.1);
+  --rule-strong: rgb(18 34 63 / 0.2);
+
+  --font-display: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-sans: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-serif: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+  --font-editorial: 'Fira Sans', system-ui, 'Segoe UI', sans-serif;
+
+  --weight-body: 400;
+  --weight-display: 300;
+
+  background: var(--paper);
+  color: var(--ink-body);
+}
+
+[data-theme='dark'] .ministerio {
+  --paper: #0e1522;
+  --paper-sunk: #0a101b;
+  --paper-raised: #152033;
+
+  --ink: #e8edf5;
+  --ink-body: #c4cedd;
+  --ink-muted: #9eabbf;
+  --ink-faint: #e8edf5; /* en oscuro, igual que --ink */
+
+  --accent: #8db6ec;
+  --accent-vivid: #a9c8f2;
+
+  --rule: rgb(232 237 245 / 0.1);
+  --rule-strong: rgb(232 237 245 / 0.2);
+
+  /* Texto claro sobre fondo oscuro se ve más grueso: medio grado menos. */
+  --weight-body: 350;
 }

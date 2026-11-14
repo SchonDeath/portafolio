@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
     <div
       v-if="client"
       ref="dialog"
-      class="client-overlay"
+      class="client-overlay ministerio"
       role="dialog"
       aria-modal="true"
       :aria-label="`Proyectos de ${client.name}`"
@@ -109,28 +109,26 @@ onBeforeUnmount(() => {
       <div class="shell client-overlay__content">
         <!-- Cabecera del archivo: identificación y contexto -->
         <div class="client-overlay__head">
-          <div class="client-overlay__mark">
-            <img :src="client.logo" :alt="`Logotipo de ${client.name}`" />
-          </div>
-
           <div>
             <p class="meta client-overlay__sector">{{ client.sector }} · {{ client.period }}</p>
             <h2 class="display-l">{{ client.name }}</h2>
-            <p class="lead client-overlay__summary">{{ client.summary }}</p>
-
-            <dl class="client-overlay__facts">
-              <div>
-                <dt class="meta-xs">
-                  {{ client.companyLogo ? 'Empresa desde la que participé' : 'Modalidad' }}
-                </dt>
-                <dd>{{ client.company }}</dd>
-              </div>
-              <div>
-                <dt class="meta-xs">Proyectos</dt>
-                <dd>{{ client.projects.length }}</dd>
-              </div>
-            </dl>
+            <p class="lead client-overlay__summary">{{ client.role }}</p>
           </div>
+
+          <dl class="client-overlay__company">
+            <dt class="meta-xs">
+              {{ client.companyLogo ? 'Empresa desde la que participé' : 'Modalidad' }}
+            </dt>
+            <dd>
+              <img
+                v-if="client.companyLogo"
+                :src="client.companyLogo"
+                :alt="`Logotipo de ${client.company}`"
+                class="client-overlay__company-logo"
+              />
+              <span>{{ client.company }}</span>
+            </dd>
+          </dl>
         </div>
 
         <!-- Proyectos del cliente -->
@@ -152,11 +150,6 @@ onBeforeUnmount(() => {
                   <li v-for="tech in project.stack" :key="tech">{{ tech }}</li>
                 </ul>
 
-                <details v-if="project.capture" class="client-overlay__details">
-                  <summary class="meta">Ver captura de la interfaz</summary>
-                  <img :src="project.capture" :alt="`Captura de ${project.title}`" loading="lazy" />
-                </details>
-
                 <div v-if="project.live || project.repo" class="client-overlay__links">
                   <a v-if="project.live" :href="project.live" target="_blank" rel="noopener">
                     <span class="underline-grow">Ver proyecto</span> <span aria-hidden="true">↗</span>
@@ -167,7 +160,7 @@ onBeforeUnmount(() => {
                 </div>
               </div>
 
-              <figure class="client-overlay__figure">
+              <figure v-if="project.imageKind !== 'illustration'" class="client-overlay__figure">
                 <img
                   :src="project.image"
                   :alt="`${project.imageKind === 'brand' ? 'Identidad visual' : 'Imagen representativa'} de ${project.title}`"
@@ -249,33 +242,23 @@ onBeforeUnmount(() => {
 
 @media (min-width: 62rem) {
   .client-overlay__head {
-    grid-template-columns: 12rem 1fr;
+    grid-template-columns: 1fr auto;
     gap: var(--space-8);
-    align-items: start;
+    align-items: end;
   }
-}
 
-/* Misma placa gris que en el índice, por el mismo motivo: los logos
-   llegan en tintas opuestas y sobre papel claro los blancos se pierden. */
-.client-overlay__mark {
-  display: grid;
-  place-items: center;
-  width: 12rem;
-  height: 7rem;
-  padding: var(--space-5);
-  background: #46505e;
-  border: 1px solid var(--rule);
-}
+  .client-overlay__company {
+    text-align: right;
+  }
 
-.client-overlay__mark img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  .client-overlay__company dd {
+    justify-content: flex-end;
+  }
 }
 
 .client-overlay__sector {
   margin-bottom: var(--space-3);
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .client-overlay__summary {
@@ -284,17 +267,23 @@ onBeforeUnmount(() => {
   color: var(--ink-muted);
 }
 
-.client-overlay__facts {
+/* Empresa: a la derecha en escritorio, con su logo. */
+.client-overlay__company dd {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-6);
-  margin-top: var(--space-6);
-}
-
-.client-overlay__facts dd {
-  margin-top: var(--space-1);
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
   color: var(--ink);
   font-size: var(--step-body-s);
+}
+
+.client-overlay__company-logo {
+  height: 2.5rem;
+  width: auto;
+  max-width: 9rem;
+  object-fit: contain;
+  /* Los logos son JPG con fondo blanco: así se funden con el papel. */
+  mix-blend-mode: multiply;
 }
 
 .client-overlay__projects > li {
@@ -312,6 +301,11 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr 20rem;
     gap: var(--space-8);
     align-items: start;
+  }
+
+  .client-overlay__project:not(:has(.client-overlay__figure)) {
+    grid-template-columns: minmax(0, 52rem);
+    justify-content: center;
   }
 }
 
@@ -338,23 +332,6 @@ onBeforeUnmount(() => {
 
 .client-overlay__stack {
   margin-top: var(--space-5);
-}
-
-.client-overlay__details {
-  margin-top: var(--space-5);
-  padding: var(--space-4);
-  border: 1px solid var(--rule-strong);
-}
-
-.client-overlay__details summary {
-  color: var(--ink);
-}
-
-.client-overlay__details img {
-  width: 100%;
-  height: auto;
-  margin-top: var(--space-4);
-  border: 1px solid var(--rule);
 }
 
 .client-overlay__links {

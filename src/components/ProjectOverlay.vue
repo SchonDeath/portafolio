@@ -102,7 +102,7 @@ onBeforeUnmount(() => {
     <div
       v-if="project"
       ref="dialog"
-      class="overlay"
+      class="overlay ministerio"
       role="dialog"
       aria-modal="true"
       :aria-label="project.title"

@@ -101,7 +101,10 @@ onBeforeUnmount(() => {
             <span>{{ client.name }}</span>
           </p>
           <button ref="closeButton" type="button" class="client-overlay__close" @click="emit('close')">
-            Cerrar <span aria-hidden="true">×</span>
+            <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+              <path d="M3 3l10 10M13 3 3 13" />
+            </svg>
+            <span>Cerrar</span>
           </button>
         </div>
       </header>
@@ -213,20 +216,33 @@ onBeforeUnmount(() => {
   color: var(--accent);
 }
 
+/* Botón de cierre visible y con área de toque generosa. */
 .client-overlay__close {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-mono);
-  font-size: var(--step-meta);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink);
-  transition: color var(--dur-ui) var(--ease-ui);
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-ui) var(--ease-ui),
+    border-color var(--dur-ui) var(--ease-ui);
 }
 
 .client-overlay__close:hover {
-  color: var(--accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.client-overlay__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .client-overlay__content {

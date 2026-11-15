@@ -150,7 +150,7 @@ export const profile = {
   ],
   // TODO: ruta a tu foto. Recomendado: 800×1000px, retrato.
   portrait: `${import.meta.env.BASE_URL}img/portrait.svg`,
-  email: 'stylefreewin@gmail.com',
+  email: 'xxx',
   // TODO: ruta a tu CV en /public, o déjalo vacío para ocultar el botón.
   resume: '',
   // Estado que se muestra como píldora en el hero.
@@ -183,16 +183,33 @@ export const skills: SkillGroup[] = [
       'JavaScript / TypeScript',
       'Vue 3 · Options y Composition API',
       'Pinia · Vuex',
-      'Bootstrap 5 · CSS nativo',
+      'React · nivel base',
+      'Tailwind · Bootstrap 5 · CSS nativo',
     ],
   },
   {
     label: 'Herramientas',
     items: [
-      'Vite',
+      'Vite · esbuild',
+      'npm · pnpm',
+      'ESLint · Prettier',
+      'Git · GitHub · GitLab',
       'Axios · consumo de API REST',
-      'Git',
-      'Playwright · verificación de accesibilidad',
+      'Postman · pruebas de API',
+      'Google Analytics 4 · Google Tag Manager',
+      'IA asistida · Claude Code · Copilot · Cursor',
+    ],
+  },
+  {
+    label: 'Testing',
+    items: ['Vitest · Jest', 'Playwright · Cypress', 'Verificación de accesibilidad'],
+  },
+  {
+    label: 'Rendimiento y seguridad web',
+    items: [
+      'Lighthouse · Core Web Vitals',
+      'Cache-Control · Service Workers',
+      'CORS · HTTPS · CSP',
     ],
   },
   {
@@ -200,14 +217,22 @@ export const skills: SkillGroup[] = [
     items: [
       'Java / Spring Boot',
       'Python · Django · FastAPI',
-      'Node.js / NestJS',
-      'SQLAlchemy',
-      'API REST · JDBC',
+      'JavaScript · Node.js / NestJS',
+      'API REST · SOAP · JSON APIs',
+      'Autenticación con JWT',
+      'Caché',
+      'Microservicios · Serverless',
     ],
   },
   {
     label: 'Datos',
-    items: ['PostgreSQL', 'OracleDB', 'MariaDB', 'MongoDB'],
+    items: [
+      'Bases de datos relacionales',
+      'PostgreSQL · MySQL · MariaDB',
+      'OracleDB · SQL Server · SQLite',
+      'JDBC · SQLAlchemy',
+      'MongoDB',
+    ],
   },
   {
     label: 'Arquitectura y calidad',
@@ -220,8 +245,8 @@ export const skills: SkillGroup[] = [
     ],
   },
   {
-    label: 'Plataforma',
-    items: ['Modyo', 'Liferay', 'Pasos a producción'],
+    label: 'Plataforma y despliegue',
+    items: ['Modyo', 'Liferay', 'GitHub Pages · Vercel · Netlify'],
   },
 ]
 
@@ -247,12 +272,12 @@ export const projects: Project[] = [
   {
     id: 'sii-design-system-iva',
     title: 'Fortalecimiento de Impuestos Indirectos y Directos',
-    tagline: 'Una librería de componentes propia, sin dependencias de peso',
+    tagline: 'Estándares, un core de diseño y equipos que escalan',
     client: 'Servicio de Impuestos Internos',
     sector: 'Sector público',
     description:
-      'Los formularios del SII —F29, F50, 3500, 3600, 3561, 3298, 3299, herencias— venían cada uno con su propio criterio visual y su propia forma de resolver lo mismo. Armé los repositorios y un design system propio: una librería de componentes en Vue con CSS nativo, deliberadamente sin frameworks de UI, porque cada kilobyte se paga en la conexión de quien declara desde una zona sin fibra. Ahí me tocó el rol técnico completo: repartir el frontend entre el equipo, enseñar Clean Architecture y patrones de diseño, y sostener el estándar de accesibilidad y calidad en todos los proyectos del área.',
-    stack: ['Vue 3', 'CSS nativo', 'Design system', 'Accesibilidad', 'Clean Architecture'],
+      'Un rol que va más allá de los formularios tributarios (F29, F50, 3500, 3600, 3561, 3298, 3299, herencias, entre otros). Estandaricé los procesos de desarrollo frontend del área y creé un core de diseño: una librería de componentes en Vue con CSS nativo que comparten todos los proyectos. Definí cómo se resuelven las integraciones con los servicios, sostuve el estándar de accesibilidad y diseñé pensando en escalabilidad, para que cada sistema nuevo parta de una base común. También enseñé a los equipos Clean Architecture, patrones de diseño y buenas prácticas en Vue.',
+    stack: ['Vue 3', 'CSS nativo', 'Design system', 'Integraciones', 'Accesibilidad', 'Escalabilidad'],
     image: impuestosCover,
     imageKind: 'illustration',
     year: '2025 — Presente',
@@ -267,7 +292,7 @@ export const projects: Project[] = [
     client: 'Servicio de Impuestos Internos',
     sector: 'Sector público',
     description:
-      'Migración del sistema de Procedimiento de Aplicación de Sanciones y Concesión de Condonaciones, que corría sobre GWT, Java y JBoss. La primera etapa fue planificar el traslado a un stack escalable y llevar el frontend: patrones de arquitectura, uso de la memoria del navegador y reglas de negocio tributarias implementadas donde correspondía. En la segunda etapa entré también al backend, con Java y Spring Boot sobre JDBC y servicios API REST. En paralelo formé a equipos de Sonda en Vue: qué resuelve, cómo se integra con Axios y qué patrones sostienen un sistema que va a durar.',
+      'Migración del sistema de Procedimiento de Aplicación de Sanciones y Concesión de Condonaciones, que corría sobre GWT, Java y JBoss. La primera etapa fue planificar el traslado a un stack escalable y llevar el frontend: patrones de arquitectura, uso de la memoria del navegador y reglas de negocio tributarias implementadas donde correspondía. En la segunda etapa entré también al backend, con Java y Spring Boot sobre JDBC y servicios API REST.',
     stack: ['Vue 3', 'Java', 'Spring Boot', 'API REST', 'JDBC'],
     image: pascCover,
     imageKind: 'illustration',

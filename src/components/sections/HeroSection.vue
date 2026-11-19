@@ -73,6 +73,18 @@ const secondMounted = ref(false)
 const secondReady = ref(false)
 const videoEls: (HTMLVideoElement | null)[] = []
 
+// Vue escribe `muted` como propiedad después de crear el elemento, y
+// Safari de iOS decide el autoplay antes: sin esto, en iPhone el vídeo se
+// queda parado. Se fuerza aquí y se pide play() a mano.
+const setVideo = (i: number, el: HTMLVideoElement | null) => {
+  if (el && videoEls[i] !== el) {
+    el.muted = true
+    el.defaultMuted = true
+    if (i === 0) el.play().catch(() => {})
+  }
+  videoEls[i] = el
+}
+
 const onPlaying = (i: number) => {
   if (i !== 0) return
   playing.value = true
@@ -131,10 +143,9 @@ const detach = () => {
 }
 
 onMounted(() => {
-  const wide = window.matchMedia('(min-width: 48rem)').matches
   const saveData =
     (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true
-  videoOn.value = wide && !prefersReducedMotion() && !saveData
+  videoOn.value = !prefersReducedMotion() && !saveData
 
   if (intro.value) {
     window.addEventListener('click', onClick, true)
@@ -154,7 +165,7 @@ const index = [
 </script>
 
 <template>
-  <section id="inicio" class="hero" :class="{ 'hero--opening': opening }">
+  <section id="inicio" class="hero" :class="{ 'hero--opening': opening, 'hero--video': videoOn }">
     <!-- Paneles de collage. Decorativos: alt vacío y fuera del árbol de
          accesibilidad, el contenido está todo en el centro. -->
     <div class="hero__strip hero__strip--left" aria-hidden="true">
@@ -167,8 +178,11 @@ const index = [
     <div class="hero__stage">
       <div class="hero__media" aria-hidden="true">
         <picture>
-          <source media="(min-width: 48rem)" :srcset="horizontePoster" />
-          <img :src="cieloAndes" alt="" fetchpriority="high" decoding="async" />
+          <!-- Sin vídeo (reduce-motion, ahorro de datos) el móvil usa la
+               foto vertical; con vídeo, el primer fotograma, para que el
+               fundido no cambie de paisaje. -->
+          <source v-if="!videoOn" media="(max-width: 47.99rem)" :srcset="cieloAndes" />
+          <img :src="horizontePoster" alt="" fetchpriority="high" decoding="async" />
         </picture>
         <template v-if="videoOn">
           <!-- El primero se repite solo mientras el segundo no esté listo;
@@ -176,7 +190,7 @@ const index = [
           <video
             v-for="(clip, i) in clips.slice(0, secondMounted ? 2 : 1)"
             :key="clip"
-            :ref="(el) => (videoEls[i] = el as HTMLVideoElement | null)"
+            :ref="(el) => setVideo(i, el as HTMLVideoElement | null)"
             :src="clip"
             :class="{ 'is-playing': playing && active === i }"
             :autoplay="i === 0"
@@ -261,6 +275,49 @@ const index = [
 @media (min-width: 48rem) {
   .hero {
     --horizon: 45%;
+  }
+}
+
+/* ── Móvil ───────────────────────────────────────────────────
+   En 390px tres tercios iguales dejan el saludo en una columna de 130px:
+   el panel central se ensancha y los papeles quedan como dos bandas.
+   Abierta la portada, las tiras de 16px parecían un fallo de render, así
+   que el horizonte ocupa todo el ancho. */
+@media (max-width: 47.99rem) {
+  .hero {
+    --intro-window: 64%;
+  }
+
+  /* Con vídeo manda el horizonte del vídeo, no el de la foto vertical. */
+  .hero--video {
+    --horizon: 45%;
+  }
+
+  .hero .hero__stage {
+    clip-path: inset(0 0);
+  }
+
+  .hero .hero__content {
+    padding: calc(68px + clamp(3.5rem, 11svh, 6rem)) calc(var(--strip) + var(--space-5)) var(--space-6);
+  }
+
+  .hero .hero__name {
+    font-size: clamp(2.25rem, 10.5vw, 3rem);
+  }
+
+  /* El índice cae sobre la parte oscura del paisaje, bajo el horizonte. */
+  .hero .hero__index {
+    margin-top: clamp(2.5rem, 12svh, 6.5rem);
+    font-size: 1.0625rem;
+  }
+
+  .hero .hero__index a {
+    padding-block: 0.5rem;
+    text-shadow: 0 1px 10px rgb(0 0 0 / 0.5);
+  }
+
+  .hero .hero__welcome {
+    font-size: clamp(2rem, 9vw, 2.75rem);
   }
 }
 
